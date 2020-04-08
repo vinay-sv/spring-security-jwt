@@ -50,6 +50,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                         userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken
                         .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                // The below setting of the context helps the next filter in the filter chain which is UserPasswordAuthenticationFilter class to validate the username and password of the incoming user
+                // If the below context is not set, then the user will not be authenticated as the UserPasswordAuthenticationFilter will not have any data to authenticate with
+                // Once the context is set, since there is a check SecurityContextHolder.getContext().getAuthentication() == null, which makes sure that we do not set the username and password again, if the context is already set
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }
